@@ -23,7 +23,10 @@ angular.module('dialogAngularApp')
         }
     }])
     .controller('MainCtrl', ['$scope', '$http', '$log', 'PageService', function ($scope, $http, $log, PageService) {
-        PageService(0).success(function(page) { $log.log(page.entries); $scope.entries = page.entries; });
+        PageService(0).then(function(page) {
+            $log.log(page.entries);
+            $scope.entries = page.entries;
+        });
 
         // $http.get('data/page_0.idx').success(function(data) {
         //     var obj= PHPUnserialize.unserialize(data);
