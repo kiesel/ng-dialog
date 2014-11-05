@@ -8,33 +8,66 @@
  * Controller of the dialogAngularApp
  */
 angular.module('dialogAngularApp')
-    .factory('PageService', ['$q', '$http', '$log', function($q, $http, $log) {
-        return function($index) {
-            $log.log('>>> PageService; index= ', $index);
+    .factory('PageService', ['$http', '$log', function ($http, $log) {
+        return function ($index) {
+            $log.log('>>> PageService; index= ' + $index);
             
-            var deferred = $q.defer();
-            $http.get('data/page_' + $index + '.idx').then(function(response) {
-                var page = PHPUnserialize.unserialize(response.data);
-                $log.log('<<< ', page);
-                deferred.resolve(page);
+            var responsePromise = $http.get('data/page_' + $index + '.idx', {
+                transformResponse: function (value) {
+                    try {
+                        return PHPUnserialize.unserialize(value);
+                    } catch (e) {
+                        $log.error('Something went wrong deserializing the data: ', e);
+                        $log.error(value);
+                    }
+                }
             });
 
-            return deferred.promise;
-        }
+            return responsePromise;
+        };
     }])
-    .controller('MainCtrl', ['$scope', '$http', '$log', 'PageService', function ($scope, $http, $log, PageService) {
-        PageService(0).then(function(page) {
-            $log.log(page.entries);
-            $scope.entries = page.entries;
+    .factory('EntriesService', ['$http', '$log', function ($http, $log) {
+        return function ($entryName) {
+            $log.log('>>> EntriesService; name= ' + $entryName);
+
+            var responsePromise = $http.get('data/' + $entryName + '.dat', {
+                transformResponse: function (value) {
+                    try {
+                        return PHPUnserialize.unserialize(value);
+                    } catch (e) {
+                        $log.error('Something went wrong deserializing the data: ', e);
+                        $log.error(value);
+                    }
+                }
+            });
+
+            return responsePromise;
+        };
+    }])
+    .controller('MainCtrl', ['$scope', '$log', 'PageService', function ($scope, $log, PageService) {
+        $scope.totalEntries = 0;
+        $scope.perPage = 0;
+        $scope.entries = {};
+
+        PageService(0).success(function (data) {
+            $log.log('Received page entries: ', data);
+            $scope.totalEntries = data.total;
+            $scope.perPage = data.perpage;
+            $scope.entries = data.entries;
         });
-
-        // $http.get('data/page_0.idx').success(function(data) {
-        //     var obj= PHPUnserialize.unserialize(data);
-        //     $log.log(obj);
-
-        //     $scope.entries= obj;
-        // });
     }])
-    .controller('PageEntryCtrl', ['$scope', '$log', function($scope, $log) {
-        $log.log('Processing ' + $scope.name);
-    }]);
+    .controller('PageEntryCtrl', ['$scope', '$log', 'EntriesService', function ($scope, $log, EntriesService) {
+        $log.log('Processing ' + $scope.entry);
+
+        EntriesService($scope.entry).success(function (data) {
+            $log.log('Received entry: ', data);
+
+            $scope.data = data;
+        });
+    }])
+    .directive('dialogEntryDisplay', function() {
+        return {
+            // template: 'Hello!<h4>{{ name +  ' + ' + entry }}</h4>'
+            templateUrl: 'views/partials/main-entry-display.html'
+        };
+    });

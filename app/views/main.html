@@ -8,10 +8,14 @@
 </div>
 
 <div class="row marketing">
-  <div class="entry" 
-   ng-repeat="(name, entry) in entries.entries" 
+  <p>Total entries: {{totalEntries}}, with {{perPage}} on a page.</p>
+
+  <div class="entry"
+   ng-repeat="(name, entry) in entries"
    ng-controller="PageEntryCtrl" 
-   ng-init="name=name; entry=entry">
-    <h4>{{ name +  ' + ' + entry }}</h4>
+   ng-init="name=name; entry=entry"
+   >
+    <div dialog-entry-display></div>
+
   </div>
 </div>
