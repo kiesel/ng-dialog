@@ -12,17 +12,7 @@ angular.module('dialogAngularApp')
         return function ($index) {
             $log.log('>>> PageService; index= ' + $index);
             
-            var responsePromise = $http.get('data/page_' + $index + '.idx', {
-                transformResponse: function (value) {
-                    try {
-                        return PHPUnserialize.unserialize(value);
-                    } catch (e) {
-                        $log.error('Something went wrong deserializing the data: ', e);
-                        $log.error(value);
-                    }
-                }
-            });
-
+            var responsePromise = $http.get('data/page_' + $index + '.idx.json');
             return responsePromise;
         };
     }])
@@ -30,17 +20,7 @@ angular.module('dialogAngularApp')
         return function ($entryName) {
             $log.log('>>> EntriesService; name= ' + $entryName);
 
-            var responsePromise = $http.get('data/' + $entryName + '.dat', {
-                transformResponse: function (value) {
-                    try {
-                        return PHPUnserialize.unserialize(value);
-                    } catch (e) {
-                        $log.error('Something went wrong deserializing the data: ', e);
-                        $log.error(value);
-                    }
-                }
-            });
-
+            var responsePromise = $http.get('data/' + $entryName + '.dat.json');
             return responsePromise;
         };
     }])
@@ -61,13 +41,23 @@ angular.module('dialogAngularApp')
 
         EntriesService($scope.entry).success(function (data) {
             $log.log('Received entry: ', data);
-
             $scope.data = data;
+        });
+    }])
+    .controller('AlbumCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', function($scope, $log, $routeParams, EntriesService) {
+        $log.log('Album:', $routeParams.title);
+
+        EntriesService($routeParams.title).success(function (data) {
+            $scope.entry = data;
         });
     }])
     .directive('dialogEntryDisplay', function() {
         return {
-            // template: 'Hello!<h4>{{ name +  ' + ' + entry }}</h4>'
             templateUrl: 'views/partials/main-entry-display.html'
         };
+    })
+    .directive('dialogImageHighlight', function() {
+        return {
+            template: '<a href="#" class="thumbnail"><img alt="Loading highlight ..." data-src="http://s3.dialog.kiesel.name.s3.amazonaws.com/albums/{{ data.name }}/{{ highlight.name }}"/></a>'
+        }
     });

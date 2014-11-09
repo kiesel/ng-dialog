@@ -1,17 +1,18 @@
-<div class="jumbotron">
-  <h1>'Allo, 'Allo!</h1>
-  <p class="lead">
-    <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-    Always a pleasure scaffolding your apps.
-  </p>
-  <p><a class="btn btn-lg btn-success" ng-href="#">Splendid!<span class="glyphicon glyphicon-ok"></span></a></p>
+<!-- <div class="jumbotron">
+  <div class="container">
+    <h1>dialog</h1>
+    <p class="lead">
+      <img src="images/yeoman.png" alt="I'm Yeoman"><br>
+      Always a pleasure scaffolding your apps.
+    </p>
+  </div>
 </div>
-
+ -->
 <div class="row marketing">
   <p>Total entries: {{totalEntries}}, with {{perPage}} on a page.</p>
 
   <div class="entry"
-   ng-repeat="(name, entry) in entries"
+   ng-repeat="(name, entry) in entries | orderBy:createdAt.value:reverse"
    ng-controller="PageEntryCtrl" 
    ng-init="name=name; entry=entry"
    >

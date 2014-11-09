@@ -23,9 +23,9 @@ angular
         templateUrl: 'views/main.html',
         controller: 'MainCtrl'
       })
-      .when('/page/:pageNo', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+      .when('/album/:title/', {
+        templateUrl: 'views/album.html',
+        controller: 'AlbumCtrl'
       })
       .when('/about', {
         templateUrl: 'views/about.html',
