@@ -1,1 +1,22 @@
-<p>Album view</p>
+<h1>{{ entry.title }}</h1>
+<p>Published {{ entry.createdAt.value }}</p>
+
+<p ng-bind-html="entry.description"/>
+
+<p>This album contains {{ meta.numPictures }} images in {{ meta.numChapters }} chapter(s).</p>
+
+<hr/>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="chapter" ng-repeat="chapter in entry.chapters">
+      <div class="image" ng-repeat="image in chapter.images">
+        <div class="col-md-4">
+          <a href="#" class="thumbnail">
+            <img ng-src="{{ appConfig.imageBaseUri }}/albums/{{ entry.name }}/{{ image.name }}" alt="{{ image.name }}"/>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

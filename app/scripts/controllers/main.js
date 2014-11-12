@@ -8,6 +8,9 @@
  * Controller of the dialogAngularApp
  */
 angular.module('dialogAngularApp')
+    .value('appConfig', {
+        imageBaseUri: 'http://s3.dialog.kiesel.name.s3.amazonaws.com'
+    })
     .factory('PageService', ['$http', '$log', function ($http, $log) {
         return function ($index) {
             $log.log('>>> PageService; index= ' + $index);
@@ -44,11 +47,23 @@ angular.module('dialogAngularApp')
             $scope.data = data;
         });
     }])
-    .controller('AlbumCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', function($scope, $log, $routeParams, EntriesService) {
+    .controller('AlbumCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', 'appConfig', function($scope, $log, $routeParams, EntriesService, appConfig) {
         $log.log('Album:', $routeParams.title);
+        $scope.appConfig = appConfig;
 
         EntriesService($routeParams.title).success(function (data) {
             $scope.entry = data;
+            $scope.meta = {
+                numChapters: data.chapters.length,
+                numPictures: 0
+            }
+
+            // Count number of images
+            for (var i in data.chapters) {
+                $scope.meta.numPictures += data.chapters[i].images.length;
+            }
+
+            $log.log('Data', $scope.meta, $scope.entry);
         });
     }])
     .directive('dialogEntryDisplay', function() {
@@ -56,8 +71,8 @@ angular.module('dialogAngularApp')
             templateUrl: 'views/partials/main-entry-display.html'
         };
     })
-    .directive('dialogImageHighlight', function() {
+    .directive('dialogImageHighlight', ['appConfig', function(appConfig) {
         return {
-            template: '<a href="#" class="thumbnail"><img alt="Loading highlight ..." data-src="http://s3.dialog.kiesel.name.s3.amazonaws.com/albums/{{ data.name }}/{{ highlight.name }}"/></a>'
+            template: '<a href="#" class="thumbnail"><img alt="Loading highlight ..." ng-src="' + appConfig.imageBaseUri + '/albums/{{ data.name }}/{{ highlight.name }}"/></a>'
         }
-    });
+    }]);
