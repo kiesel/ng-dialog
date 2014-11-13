@@ -12,10 +12,10 @@ angular.module('dialogAngularApp')
         imageBaseUri: 'http://s3.dialog.kiesel.name.s3.amazonaws.com'
     })
     .factory('PageService', ['$http', '$log', function ($http, $log) {
-        return function ($index) {
-            $log.log('>>> PageService; index= ' + $index);
+        return function () {
+            $log.log('>>> PageService called.');
             
-            var responsePromise = $http.get('data/page_' + $index + '.idx.json');
+            var responsePromise = $http.get('data/allpages.json', { cache: true });
             return responsePromise;
         };
     }])
@@ -23,26 +23,33 @@ angular.module('dialogAngularApp')
         return function ($entryName) {
             $log.log('>>> EntriesService; name= ' + $entryName);
 
-            var responsePromise = $http.get('data/' + $entryName + '.dat.json');
+            var responsePromise = $http.get('data/' + $entryName + '.dat.json', { cache: true });
             return responsePromise;
         };
     }])
     .controller('MainCtrl', ['$scope', '$log', 'PageService', function ($scope, $log, PageService) {
         $scope.totalEntries = 0;
-        $scope.perPage = 0;
         $scope.entries = {};
 
-        PageService(0).success(function (data) {
+        PageService().success(function (data) {
             $log.log('Received page entries: ', data);
-            $scope.totalEntries = data.total;
-            $scope.perPage = data.perpage;
-            $scope.entries = data.entries;
+            $scope.totalEntries = data.length;
+
+            var entries = [];
+            for (var index in data) {
+                entries.push({
+                    key: index,
+                    data: data[index]
+                });
+            }
+
+            $scope.entries = entries;
         });
     }])
     .controller('PageEntryCtrl', ['$scope', '$log', 'EntriesService', function ($scope, $log, EntriesService) {
-        $log.log('Processing ' + $scope.entry);
+        $log.log('Processing ', $scope.element);
 
-        EntriesService($scope.entry).success(function (data) {
+        EntriesService($scope.element.data).success(function (data) {
             $log.log('Received entry: ', data);
             $scope.data = data;
         });

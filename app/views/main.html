@@ -12,9 +12,9 @@
   <p>Total entries: {{totalEntries}}, with {{perPage}} on a page.</p>
 
   <div class="entry"
-   ng-repeat="(name, entry) in entries | orderBy:createdAt.value:reverse"
+   ng-repeat="element in entries | limitTo: 5"
    ng-controller="PageEntryCtrl" 
-   ng-init="name=name; entry=entry"
+   ng-init="element=element"
    >
     <div dialog-entry-display></div>
 
