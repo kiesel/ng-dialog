@@ -9,7 +9,8 @@
  */
 angular.module('dialogAngularApp')
     .value('appConfig', {
-        imageBaseUri: 'http://s3.dialog.kiesel.name.s3.amazonaws.com'
+        imageBaseUri: 'http://s3.dialog.kiesel.name.s3.amazonaws.com',
+        siteTitle: 'dialog.kiesel.name'
     })
     .factory('PageService', ['$http', '$log', function ($http, $log) {
         return function () {
@@ -71,6 +72,55 @@ angular.module('dialogAngularApp')
             }
 
             $log.log('Data', $scope.meta, $scope.entry);
+        });
+    }])
+    .controller('AlbumImageCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', 'appConfig', function ($scope, $log, $routeParams, EntriesService, appConfig) {
+        $log.log('Album:', $routeParams.title, 'Image:', $routeParams.image);
+        $scope.appConfig = appConfig;
+
+        EntriesService($routeParams.title).success(function (data) {
+            $log.log(data);
+            $scope.album = data;
+
+            var images = [];
+
+            // Build array of images over chapters
+            for (var i in data.chapters) {
+                var chapter = data.chapters[i];
+                for (var j in chapter.images) {
+                    var img = chapter.images[j];
+
+                    images.push({
+                        chapter: chapter,
+                        image: img
+                    });
+                }
+            }
+
+            // Find image in question, set pointers to next ones
+            images.every(function (image, index, array) {
+                if (image.image.name == $routeParams.image) {
+                    $scope.image= image;
+
+                    if (0 < index) {
+                        $log.log('Prev image:', array[index- 1]);
+                        $scope.prevImage = array[index- 1];
+                    }
+
+                    if (index + 1 <= array.length) {
+                        $scope.nextImage = array[index+ 1];
+                    }
+
+                    return false;
+                }
+
+                // Skip to next one ...
+                return true;
+            });
+
+
+            $log.log('images', images);
+            $scope.images = images;
         });
     }])
     .directive('dialogEntryDisplay', function() {

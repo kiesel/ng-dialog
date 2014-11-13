@@ -1,0 +1,14 @@
+<ol class="breadcrumb">
+  <li><a href="#/{{ album.name }}/">{{ album.title }}</a></li>
+  <li><a href="#/{{ album.name }}">{{ image.chapter.name }}</a></li>
+  <li><a href="#/{{ album.name }}/{{ image.image.name }}">{{ image.image.name }}</a></li>
+</ol>
+
+<div class="container">
+  <img ng-src="{{ appConfig.imageBaseUri }}/albums/{{ album.name }}/{{ image.image.name }}" alt="{{ image.image.name }}"/>
+</div>
+<nav>
+<ul class="pager">
+  <li><a href="#/album/{{ album.name }}/{{ prevImage.image.name }}">Previous</a></li>  
+  <li><a href="#/album/{{ album.name }}/{{ nextImage.image.name }}">Next</a></li>
+</ul>

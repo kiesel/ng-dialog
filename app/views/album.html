@@ -12,7 +12,7 @@
     <div class="chapter" ng-repeat="chapter in entry.chapters">
       <div class="image" ng-repeat="image in chapter.images">
         <div class="col-md-4">
-          <a href="#" class="thumbnail">
+          <a href="#/album/{{ entry.name }}/{{ image.name }}" class="thumbnail">
             <img ng-src="{{ appConfig.imageBaseUri }}/albums/{{ entry.name }}/{{ image.name }}" alt="{{ image.name }}"/>
           </a>
         </div>

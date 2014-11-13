@@ -27,6 +27,10 @@ angular
         templateUrl: 'views/album.html',
         controller: 'AlbumCtrl'
       })
+      .when('/album/:title/:image', {
+        templateUrl: 'views/albumImage.html',
+        controller: 'AlbumImageCtrl'
+      })
       .when('/about', {
         templateUrl: 'views/about.html',
         controller: 'AboutCtrl'
