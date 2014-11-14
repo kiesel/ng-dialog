@@ -1,7 +1,6 @@
 <?php
 
-use \lang\ClassLoader;
-use \util\cmd\Console;
+use util\cmd\Console;
 
 class AggregatePages2Json extends \lang\Object {
 

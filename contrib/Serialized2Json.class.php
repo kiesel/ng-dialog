@@ -1,7 +1,7 @@
 <?php
 
-use \lang\ClassLoader;
-use \util\cmd\Console;
+use lang\ClassLoader;
+use util\cmd\Console;
 
 class Serialized2Json extends \lang\Object {
 
