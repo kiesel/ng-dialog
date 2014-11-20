@@ -28,8 +28,8 @@ angular.module('dialogAngularApp')
             return responsePromise;
         };
     }])
-    .controller('MainCtrl', ['$scope', '$log', 'PageService', function ($scope, $log, PageService) {
-        $scope.totalEntries = 0;
+    .controller('MainCtrl', ['$scope', '$log', 'PageService', 'appConfig', function ($scope, $log, PageService, appConfig) {
+        $scope.appConfig = appConfig;
         $scope.entries = {};
 
         PageService().success(function (data) {
