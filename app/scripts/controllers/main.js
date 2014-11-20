@@ -128,8 +128,22 @@ angular.module('dialogAngularApp')
             templateUrl: 'views/partials/main-entry-display.html'
         };
     })
-    .directive('dialogImageHighlight', ['appConfig', function(appConfig) {
+    .directive('imgPreload', ['$rootScope', function($rootScope) {
         return {
-            template: '<a href="#" class="thumbnail"><img alt="Loading highlight ..." ng-src="' + appConfig.imageBaseUri + '/albums/{{ data.name }}/{{ highlight.name }}"/></a>'
-        }
+            restrict: 'A',
+            scope: {
+                ngSrc: '@'
+            },
+            link: function (scope, element, attrs) {
+                element.on('load', function() {
+                    element.addClass('in');
+                }).on('error', function() {
+                    // TODO Signal error
+                });
+
+                scope.$watch('ngSrc', function(newVal) {
+                    element.removeClass('in');
+                });
+            }
+        };
     }]);

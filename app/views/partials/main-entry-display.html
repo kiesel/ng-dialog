@@ -1,12 +1,6 @@
-<h4><a href="#/album/{{data.name}}/">{{ data.title }}</a></h4>
-<p>
-  Published
-  Type: {{ data.__type }}, title: {{ data.name }}
-</p>
-<p ng-bind-html="data.description"></p>
-
-<div class="row">
-  <div class="col-xs-6 col-md-4" ng-repeat="highlight in data.highlights | limitTo: 3">
-    <div dialog-image-highlight/>
-   </div>
+<div class="album-background">
+  <a href="#/album/{{data.name}}/">
+    <span>{{ data.title }}</span>
+    <img img-preload ng-src="{{ appConfig.imageBaseUri }}/albums/{{ data.name }}/{{ data.highlights[0].name }}" class="img-responsive img-rounded fade"/>
+  </a>
 </div>

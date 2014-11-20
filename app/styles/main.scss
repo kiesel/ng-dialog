@@ -70,9 +70,6 @@ body {
 
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
 
   /* Remove the padding we set earlier */
   .header,
@@ -88,5 +85,32 @@ body {
   /* Remove the bottom border on the jumbotron for visual effect */
   .jumbotron {
     border-bottom: 0;
+  }
+}
+
+.album-background {
+  position: relative;
+  padding-bottom: 30px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+  }
+
+  a {
+    font-size: 40pt;
+    font-weight: bold;
+    text-decoration: none;
+
+    span {
+      width: 100%;
+      position: absolute;
+      top: 10px;
+      overflow: hidden;
+      padding: 0px 10px 0px 10px;
+
+      background-color: white;
+      opacity: 0.5;
+    }
   }
 }

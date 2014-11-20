@@ -1,16 +1,4 @@
-<!-- <div class="jumbotron">
-  <div class="container">
-    <h1>dialog</h1>
-    <p class="lead">
-      <img src="images/yeoman.png" alt="I'm Yeoman"><br>
-      Always a pleasure scaffolding your apps.
-    </p>
-  </div>
-</div>
- -->
 <div class="row marketing">
-  <p>Total entries: {{totalEntries}}, with {{perPage}} on a page.</p>
-
   <div class="entry"
    ng-repeat="element in entries | limitTo: 5"
    ng-controller="PageEntryCtrl" 
