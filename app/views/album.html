@@ -1,22 +1,33 @@
-<h1>{{ entry.title }}</h1>
-<p>Published {{ entry.createdAt.value }}</p>
+<div class="album">
+  <div class="container section" id="section_0">
+    <nav>
+      <ul class="pager">
+        <li><a id="image-up" href="javascript:void(0);">&uarr;</a></li>
+        <li><a id="image-dn" href="javascript:void(0);">&darr;</a></li>
+      </ul>
+    </nav>
 
-<p ng-bind-html="entry.description"/>
+    <h1>{{ entry.title }}</h1>
+    <p>Published {{ entry.createdAt.value }}</p>
 
-<p>This album contains {{ meta.numPictures }} images in {{ meta.numChapters }} chapter(s).</p>
+    <blockquote>
+      <p ng-bind-html="entry.description"/>
+      <footer>
+        <p>This album contains {{ meta.numPictures }} images in {{ meta.numChapters }} chapter(s).</p>
+      </footer>
+    </blockquote>
 
-<hr/>
+  </div>
 
-<div class="container-fluid">
-  <div class="row">
-    <div class="chapter" ng-repeat="chapter in entry.chapters">
-      <div class="image" ng-repeat="image in chapter.images">
-        <div class="col-md-4">
-          <a href="#/album/{{ entry.name }}/{{ image.name }}" class="thumbnail">
-            <img ng-src="{{ appConfig.imageBaseUri }}/albums/{{ entry.name }}/{{ image.name }}" alt="{{ image.name }}"/>
-          </a>
-        </div>
-      </div>
+  <div class="section image" ng-repeat="image in images" id="section_{{ image.image.name }}">
+    <div class="container">
+      <h3>{{ image.image.name }}</h3>
+      <p>{{ image.image.exifData.exposureTime }}s, {{ image.image.exifData.focalLength }}</p>
+      <img src="blank.gif" data-src="{{ appConfig.imageBaseUri }}/albums/{{ entry.name }}/{{ image.image.name }}" class="img-responsive img-rounded unveil {{ image.image.mode }}"/>
     </div>
   </div>
 </div>
+
+<script src="bower_components/fullpage.js/jquery.fullPage.js"></script>
+<script src="bower_components/jquery.slimscroll/jquery.slimscroll.min.js"></script>
+<script type="text/javascript" src="scripts/frontend/album.js"></script>

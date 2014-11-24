@@ -14,7 +14,7 @@ angular.module('dialogAngularApp')
     })
     .factory('PageService', ['$http', '$log', function ($http, $log) {
         return function () {
-            $log.log('>>> PageService called.');
+            // $log.log('>>> PageService called.');
             
             var responsePromise = $http.get('data/allpages.json', { cache: true });
             return responsePromise;
@@ -22,7 +22,7 @@ angular.module('dialogAngularApp')
     }])
     .factory('EntriesService', ['$http', '$log', function ($http, $log) {
         return function ($entryName) {
-            $log.log('>>> EntriesService; name= ' + $entryName);
+            // $log.log('>>> EntriesService; name= ' + $entryName);
 
             var responsePromise = $http.get('data/' + $entryName + '.dat.json', { cache: true });
             return responsePromise;
@@ -33,7 +33,7 @@ angular.module('dialogAngularApp')
         $scope.entries = {};
 
         PageService().success(function (data) {
-            $log.log('Received page entries: ', data);
+            $log.log('MainCtrl recv: ', data);
             $scope.totalEntries = data.length;
 
             var entries = [];
@@ -51,8 +51,10 @@ angular.module('dialogAngularApp')
         $log.log('Processing ', $scope.element);
 
         EntriesService($scope.element.data).success(function (data) {
-            $log.log('Received entry: ', data);
+            $log.log('PageEntryCtrl recv: ', data);
             $scope.data = data;
+            var hl = data['highlights'];
+            $scope.highlight = hl[Math.floor(Math.random() * hl.length)];
         });
     }])
     .controller('AlbumCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', 'appConfig', function($scope, $log, $routeParams, EntriesService, appConfig) {
@@ -71,7 +73,24 @@ angular.module('dialogAngularApp')
                 $scope.meta.numPictures += data.chapters[i].images.length;
             }
 
-            $log.log('Data', $scope.meta, $scope.entry);
+            var images = [];
+
+            // Build array of images over chapters
+            for (var i in data.chapters) {
+                var chapter = data.chapters[i];
+                for (var j in chapter.images) {
+                    var img = chapter.images[j];
+                    img.mode = (img.width >= img.height ? 'landscape' : 'portrait');
+
+                    images.push({
+                        chapter: chapter,
+                        image: img
+                    });
+                }
+            }
+
+            $scope.images = images;
+            $log.log('AlbumCtrl data', $scope.meta, $scope.entry, $scope.images);
         });
     }])
     .controller('AlbumImageCtrl', ['$scope', '$log', '$routeParams', 'EntriesService', 'appConfig', function ($scope, $log, $routeParams, EntriesService, appConfig) {
@@ -89,6 +108,7 @@ angular.module('dialogAngularApp')
                 var chapter = data.chapters[i];
                 for (var j in chapter.images) {
                     var img = chapter.images[j];
+                    img.mode = (img.width >= img.height ? 'landscape' : 'portrait');
 
                     images.push({
                         chapter: chapter,

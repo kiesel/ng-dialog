@@ -114,3 +114,21 @@ body {
     }
   }
 }
+
+.album {
+  img.landscape {
+    width: 100%;
+  }
+
+  img.portrait {
+    height: 100%;
+    @include center-block;
+  }
+
+  nav {
+    position: fixed;
+
+    top: 0px;
+    right: 0px;
+  }
+}
